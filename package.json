@@ -1,0 +1,12 @@
+{
+  "name": "rich-text-editor",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.1.0"
+  }
+}
