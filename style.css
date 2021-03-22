@@ -1,8 +1,11 @@
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.container {
+  margin: 100px auto;
+  max-width: 768px;
+}
+
+#editor {
+  min-height: 400px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  position: relative;
 }
