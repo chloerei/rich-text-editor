@@ -20,7 +20,8 @@ export class Editor {
     this.options = options
 
     let contentElement = document.createElement('div')
-    contentElement.innerHTML = this.options.input ? this.options.input.value : ''
+    contentElement.innerHTML = this.options.input ? this.options.input.value : this.element.innerHTML
+    this.element.innerHTML = ''
 
     let state = EditorState.create({
       schema,

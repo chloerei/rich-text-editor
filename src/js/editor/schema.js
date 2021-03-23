@@ -85,36 +85,20 @@ const schema = new Schema({
       content: "text*",
       group: "block",
       attrs: {
-        image: { default: null },
-        caption: { default: null }
+        image: { default: null }
       },
       isolating: true,
       parseDOM: [{
         tag: "figure",
         contentElement: 'figcaption',
         getAttrs(dom) {
-          let attrs = {}
+          let image = dom.querySelector('img')
 
-          let images = dom.querySelectorAll('img')
-          if (images[0]) {
-            attrs.image = { src: images[0].src }
-          }
-
-          return attrs
+          return { image: (image ? { src: image.src } : null) }
         }
       }],
       toDOM(node) {
-        let pattern = ["figure"]
-
-        if (node.attrs.image) {
-          pattern.push(["img", node.attrs.image])
-        }
-
-        if (node.content.size > 0) {
-          pattern.push(["figcaption", 0])
-        }
-
-        return pattern
+        return ["figure", ["img", node.attrs.image], ["figcaption", 0]]
       }
     },
 

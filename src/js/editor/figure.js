@@ -1,6 +1,16 @@
 import { NodeSelection } from "prosemirror-state"
 import { schema } from './schema'
 
+function uploadImageAsBase64(uploader) {
+  let reader = new FileReader()
+  reader.addEventListener('load', () => {
+    uploader.setProgress(100)
+    uploader.setAttributes({ src: reader.result })
+  })
+  reader.readAsDataURL(uploader.file)
+}
+
+
 export class FigureView {
   constructor(node, view, getPos, options) {
     this.node = node
@@ -49,46 +59,24 @@ export class FigureView {
     this.renderContent(node)
   }
 
-  selectNode() {
-    this.dom.classList.add("editor-selected")
-    this.dom.draggable = true
-
-    if (this.node.attrs.image) {
-      this.dom.querySelector('.editor-popup-menu').classList.add('editor-popup-menu--open')
-    }
-  }
-
-  deselectNode() {
-    this.dom.classList.remove("editor-selected")
-    this.dom.draggable = false
-
-    if (this.node.attrs.image) {
-      this.dom.querySelector('.editor-popup-menu').classList.remove('editor-popup-menu--open')
-    }
-  }
-
   ignoreMutation(mutation) {
     return !this.contentDOM.contains(mutation.target)
   }
 
   renderContent(node) {
     let image = this.dom.querySelector('.editor-figure__content img')
+
     if (this.isImageChanged(node)) {
       let content = this.dom.querySelector('.editor-figure__content')
       content.innerHTML = ''
       if (node.attrs.image) {
         let image = document.createElement('img')
-        for (var key in node.attrs.image) {
-          image.setAttribute(key, node.attrs.image[key])
-        }
+        image.setAttribute('src', node.attrs.image.src)
         content.appendChild(image)
       }
     }
 
     this.dom.classList.toggle('editor-figure--empty', node.attrs.image == null)
-
-    this.dom.classList.toggle('editor-breakout-wide', node.attrs.breakout == 'wide')
-    this.dom.classList.toggle('editor-breakout-full', node.attrs.breakout == 'full')
 
     if (node.content.size > 0) {
       this.contentDOM.removeAttribute('data-placeholder')
@@ -126,16 +114,15 @@ export class FigureView {
     this.dom.querySelector('.editor-figure__content').innerHTML = ''
     this.dom.querySelector('.editor-figure__content').appendChild(image)
 
-    if (this.options.uploadFile) {
-      this.setProgress(0)
-      this.dom.classList.add('editor-figure--uploading')
+    this.setProgress(0)
+    this.dom.classList.add('editor-figure--uploading')
 
-      this.options.uploadFile({
-        file: file,
-        setProgress: this.setProgress.bind(this),
-        setAttributes: this.setAttributes.bind(this)
-      })
-    }
+    let uploadImage = this.options.uploadImage || uploadImageAsBase64
+    uploadImage({
+      file: file,
+      setProgress: this.setProgress.bind(this),
+      setAttributes: this.setAttributes.bind(this)
+    })
   }
 
   update(node) {
@@ -157,9 +144,7 @@ export class FigureView {
   setAttributes(attributes) {
     this.dom.classList.remove('editor-figure--uploading')
     this.view.dispatch(this.view.state.tr.setNodeMarkup(this.getPos(), null, {
-      image: {
-        src: attributes.url
-      }
+      image: attributes
     }))
   }
 }

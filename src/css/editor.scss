@@ -1,4 +1,6 @@
 .editor {
+  --primary-color: #2196F3;
+
   [data-placeholder] {
     position: relative;
 
@@ -15,9 +17,13 @@
   &:focus {
     outline: none;
   }
+
+  img {
+    max-width: 100%;
+  }
 }
 
-.editor-selected {
+.ProseMirror-selectednode {
   outline: 2px solid var(--primary-color);
 }
 
@@ -204,22 +210,6 @@
 
 .editor-figure__uploader__label {
   font-size: 14px;
-}
-
-.editor-breakout-wide {
-  width: calc(100% + 144px);
-  margin: auto -72px !important;
-}
-
-@media (max-width: 896px) {
-  .editor-breakout-wide {
-    width: calc(100vw - 16px);
-    margin: auto calc((50% + 8px - 50vw)) !important;
-  }
-}
-
-.editor-breakout-full {
-  margin: auto calc(50% - 50vw) !important;
 }
 
 .editor-dropdown {
