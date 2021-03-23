@@ -86,8 +86,7 @@ const schema = new Schema({
       group: "block",
       attrs: {
         image: { default: null },
-        caption: { default: null },
-        breakout: { default: null }
+        caption: { default: null }
       },
       isolating: true,
       parseDOM: [{
@@ -97,18 +96,8 @@ const schema = new Schema({
           let attrs = {}
 
           let images = dom.querySelectorAll('img')
-          if (images.length > 1) {
-            // use gallery
-            return false
-          }
           if (images[0]) {
             attrs.image = { src: images[0].src }
-          }
-
-          if (dom.classList.contains('editor-breakout-wide')) {
-            attrs.breakout = 'wide'
-          } else if (dom.classList.contains('editor-breakout-full')) {
-            attrs.breakout = 'full'
           }
 
           return attrs
@@ -116,10 +105,6 @@ const schema = new Schema({
       }],
       toDOM(node) {
         let pattern = ["figure"]
-
-        if (node.attrs.breakout) {
-          pattern.push({ class: `editor-breakout-${node.attrs.breakout}` })
-        }
 
         if (node.attrs.image) {
           pattern.push(["img", node.attrs.image])

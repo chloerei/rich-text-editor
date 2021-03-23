@@ -11,17 +11,6 @@ export class FigureView {
     this.options = options
 
     this.dom.innerHTML = `<div class="editor-figure__container" contenteditable="false">
-        <div class="editor-popup-menu">
-          <button type="button" class="editor-popup-menu__item" data-action="breakoutNone">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 21h17c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1zM20 8H3c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h17c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zM2 4v1c0 .55.45 1 1 1h17c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1z"/></svg>
-          </button>
-          <button type="button" class="editor-popup-menu__item" data-action="breakoutWide">
-            <svg transform="rotate(90)" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24"/><rect fill="none" height="24" width="24"/></g><g><g/><g><path d="M16,4H8C7.45,4,7,4.45,7,5v13c0,0.55,0.45,1,1,1h8c0.55,0,1-0.45,1-1V5C17,4.45,16.55,4,16,4z"/><path d="M4,6C3.45,6,3,6.45,3,7v9c0,0.55,0.45,1,1,1s1-0.45,1-1V7C5,6.45,4.55,6,4,6z"/><path d="M20,6c-0.55,0-1,0.45-1,1v9c0,0.55,0.45,1,1,1s1-0.45,1-1V7C21,6.45,20.55,6,20,6z"/></g></g></svg>
-          </button>
-          <button type="button" class="editor-popup-menu__item" data-action="breakoutFull">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 14c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1H7v-2c0-.55-.45-1-1-1zm0-4c.55 0 1-.45 1-1V7h2c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1zm11 7h-2c-.55 0-1 .45-1 1s.45 1 1 1h3c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1s-1 .45-1 1v2zM14 6c0 .55.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1z"/></svg>
-          </button>
-        </div>
         <div class="editor-figure__uploader">
           <label class="editor-figure__uploader__button">
             <div class="editor-figure__uploader__icon">
@@ -48,10 +37,6 @@ export class FigureView {
       this.startUpload(event.target.files[0])
     })
 
-    this.dom.querySelector('button[data-action="breakoutNone"]').addEventListener('click', this.actionBreakoutNone.bind(this))
-    this.dom.querySelector('button[data-action="breakoutWide"]').addEventListener('click', this.actionBreakoutWide.bind(this))
-    this.dom.querySelector('button[data-action="breakoutFull"]').addEventListener('click', this.actionBreakoutFull.bind(this))
-
     this.dom.querySelector('.editor-figure__container').addEventListener('click', (event) => {
       this.view.dispatch(
         this.view.state.tr.setSelection(NodeSelection.create(this.view.state.doc, this.getPos()))
@@ -62,30 +47,6 @@ export class FigureView {
     this.progressBarTarget = this.dom.querySelector('.editor-progress__bar')
 
     this.renderContent(node)
-  }
-
-  actionBreakoutNone() {
-    let attrs = Object.assign({}, this.node.attrs, {
-      breakout: null
-    })
-
-    this.view.dispatch(this.view.state.tr.setNodeMarkup(this.getPos(), null, attrs))
-  }
-
-  actionBreakoutWide() {
-    let attrs = Object.assign({}, this.node.attrs, {
-      breakout: 'wide'
-    })
-
-    this.view.dispatch(this.view.state.tr.setNodeMarkup(this.getPos(), null, attrs))
-  }
-
-  actionBreakoutFull() {
-    let attrs = Object.assign({}, this.node.attrs, {
-      breakout: 'full'
-    })
-
-    this.view.dispatch(this.view.state.tr.setNodeMarkup(this.getPos(), null, attrs))
   }
 
   selectNode() {
