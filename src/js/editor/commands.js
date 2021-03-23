@@ -180,10 +180,40 @@ function deleteBarrier(state, $cut, dispatch) {
   return false
 }
 
+function defaultBlockAt(match) {
+  for (let i = 0; i < match.edgeCount; i++) {
+    let {type} = match.edge(i)
+    if (type.isTextblock && !type.hasRequiredAttrs()) return type
+  }
+  return null
+}
+
+function createBlockAfterIsolating(state, dispatch) {
+  let {$head, $anchor} = state.selection
+
+  if (!$head.parent.type.spec.isolating || !$head.sameParent($anchor)) {
+    return false
+  }
+
+  let above = $head.node(-1)
+  let after = $head.indexAfter(-1)
+  let type = defaultBlockAt(above.contentMatchAt(after))
+
+  if (!above.canReplaceWith(after, after, type)) {
+    return false
+  }
+
+  if (dispatch) {
+    let pos = $head.after(), tr = state.tr.replaceWith(pos, pos, type.createAndFill())
+    tr.setSelection(Selection.near(tr.doc.resolve(pos), 1))
+    dispatch(tr.scrollIntoView())
+  }
+  return true
+}
 
 let backspace = chainCommands(deleteSelection, setParagraph, joinBackward, selectNodeBackward)
 
-let enter = chainCommands(newlineInCode, splitListItem(schema.nodes.list_item), createParagraphNear, liftEmptyBlock, splitBlock, setParagraph)
+let enter = chainCommands(newlineInCode, splitListItem(schema.nodes.list_item), createParagraphNear, liftEmptyBlock, createBlockAfterIsolating, splitBlock)
 
 let del = chainCommands(deleteSelection, joinForward, selectNodeForward)
 
