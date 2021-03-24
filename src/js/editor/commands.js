@@ -51,11 +51,98 @@ function createBlockAfterIsolating(state, dispatch) {
   return true
 }
 
-let backspace = chainCommands(deleteSelection, setParagraph, joinBackward, selectNodeBackward)
+function joinListBackward(state, dispatch) {
+  let { $cursor } = state.selection
+
+  // is text begin
+  if (!$cursor || $cursor.parentOffset != 0 ) {
+    return false
+  }
+
+  // in list_item
+  if ($cursor.depth < 2 || $cursor.node(-1).type != schema.nodes.list_item) {
+    return false
+  }
+
+  // merge two simple list_item
+  if ($cursor.index(-2) > 0 && $cursor.doc.resolve($cursor.before(-1)).nodeBefore.childCount == 1) {
+    console.log('hit')
+    if (dispatch) {
+      dispatch(
+        state.tr.join($cursor.before(-1), 2)
+      )
+    }
+    return true
+  }
+
+  // nested list, lift and merge to parent list_item
+  if ($cursor.index(-2) == 0 && $cursor.depth > 3 && $cursor.node(-3).type == schema.nodes.list_item) {
+    let $itemStart = $cursor.doc.resolve($cursor.start(-1))
+    let $itemEnd = $cursor.doc.resolve($cursor.end(-1))
+    let range = $itemStart.blockRange($itemEnd)
+
+    if (dispatch) {
+      dispatch(
+        state.tr.lift(range, $cursor.depth - 3).join($cursor.before(-2))
+      )
+    }
+
+    return true
+  }
+
+  return false
+}
+
+function joinListForward(state, dispatch) {
+  let { $cursor } = state.selection
+
+  // is text end
+  if (!$cursor || $cursor.parentOffset != $cursor.parent.content.size ) {
+    return false
+  }
+
+  // in list_item
+  if ($cursor.depth < 2 || $cursor.node(-1).type != schema.nodes.list_item) {
+    return false
+  }
+
+
+  // merge two simple list_item
+  if ($cursor.node(-1).childCount == 1 && $cursor.index(-2) < $cursor.node(-2).childCount) {
+    if (dispatch) {
+      dispatch(
+        state.tr.join($cursor.after(-1), 2)
+      )
+    }
+    return true
+  }
+
+  return false
+
+  // nested list, lift and merge to parent list_item
+  if ($cursor.index(-2) == 0 && $cursor.depth > 3 && $cursor.node(-3).type == schema.nodes.list_item) {
+    let $itemStart = $cursor.doc.resolve($cursor.start(-1))
+    let $itemEnd = $cursor.doc.resolve($cursor.end(-1))
+    let range = $itemStart.blockRange($itemEnd)
+
+    if (dispatch) {
+      dispatch(
+        state.tr.lift(range, $cursor.depth - 3).join($cursor.before(-2))
+      )
+    }
+
+    return true
+  }
+
+  return false
+}
+
+
+let backspace = chainCommands(deleteSelection, setParagraph, joinListBackward, joinBackward, selectNodeBackward)
 
 let enter = chainCommands(newlineInCode, splitListItem(schema.nodes.list_item), createParagraphNear, liftEmptyBlock, createBlockAfterIsolating, splitBlock)
 
-let del = chainCommands(deleteSelection, joinForward, selectNodeForward)
+let del = chainCommands(deleteSelection, joinListForward, joinForward, selectNodeForward)
 
 let modEnter = chainCommands(exitCode)
 
