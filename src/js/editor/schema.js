@@ -133,7 +133,8 @@ const schema = new Schema({
     },
 
     list_item: {
-      content: "paragraph block*",
+      content: "paragraph (ordered_list | bulleted_list){0,1}",
+      // content: "paragraph block*",
       parseDOM: [{tag: "li"}],
       toDOM() { return ["li", 0] },
       defining: true
