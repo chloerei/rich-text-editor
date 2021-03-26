@@ -5,7 +5,6 @@ import { Selection, NodeSelection } from "prosemirror-state"
 import { Slice, Fragment } from "prosemirror-model"
 import {joinPoint, canJoin, findWrapping, liftTarget, canSplit, ReplaceAroundStep, ReplaceStep} from "prosemirror-transform"
 import { splitListItem, liftListItem, sinkListItem, joinListForward, joinListBackward } from "./list"
-import { goToNextCell } from 'prosemirror-tables'
 import { schema } from "./schema"
 
 function setParagraph(state, dispatch) {
@@ -60,9 +59,9 @@ let del = chainCommands(deleteSelection, joinListForward, joinForward, selectNod
 
 let modEnter = chainCommands(exitCode)
 
-let tab = chainCommands(sinkListItem, goToNextCell(1))
+let tab = chainCommands(sinkListItem)
 
-let shiftTab = chainCommands(liftListItem, goToNextCell(-1))
+let shiftTab = chainCommands(liftListItem)
 
 export let pcBaseKeymap = {
   "Enter": enter,

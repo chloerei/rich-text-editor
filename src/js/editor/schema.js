@@ -138,45 +138,6 @@ const schema = new Schema({
       parseDOM: [{tag: "li"}],
       toDOM() { return ["li", 0] },
       defining: true
-    },
-
-    table: {
-      content: "table_row+",
-      tableRole: "table",
-      isolating: true,
-      group: "block",
-      parseDOM: [{tag: "table"}],
-      toDOM() { return ["table", ["tbody", 0]] }
-    },
-    table_row: {
-      content: "(table_cell | table_header)+",
-      tableRole: "row",
-      parseDOM: [{tag: "tr"}],
-      toDOM() { return ["tr", 0] }
-    },
-    table_cell: {
-      content: "block+",
-      attrs: {
-        colspan: {default: 1},
-        rowspan: {default: 1},
-        colwidth: {default: null}
-      },
-      tableRole: "cell",
-      isolating: true,
-      parseDOM: [{tag: "td", getAttrs: dom => getCellAttrs(dom, {})}],
-      toDOM(node) { return ["td", setCellAttrs(node, {}), 0] }
-    },
-    table_header: {
-      content: "block+",
-      attrs: {
-        colspan: {default: 1},
-        rowspan: {default: 1},
-        colwidth: {default: null}
-      },
-      tableRole: "header_cell",
-      isolating: true,
-      parseDOM: [{tag: "th", getAttrs: dom => getCellAttrs(dom, {})}],
-      toDOM(node) { return ["th", setCellAttrs(node, {}), 0] }
     }
   },
 
