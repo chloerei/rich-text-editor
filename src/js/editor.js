@@ -7,7 +7,7 @@ import { schema } from './editor/schema'
 import { baseInputRules } from './editor/input_rules'
 import { HeadingView } from './editor/node_views'
 import { FigureView } from './editor/figure'
-// import { CodeBlockView, arrowHandlers } from './editor/code_block'
+import { CodeBlockView } from './editor/code_block'
 import { baseKeymap } from "./editor/commands"
 import { blockMenu } from "./editor/block_menu"
 import { inlineMenu } from "./editor/inline_menu"
@@ -43,7 +43,7 @@ export class Editor {
       nodeViews: {
         heading(node) { return new HeadingView(node) },
         figure(node, view, getPos) { return new FigureView(node, view, getPos, options) },
-        // code_block(node, view, getPos) { return new CodeBlockView(node, view, getPos) }
+        code_block(node, view, getPos) { return new CodeBlockView(node, view, getPos) }
       },
       dispatchTransaction: (transaction) => {
         this.editorView.updateState(this.editorView.state.apply(transaction))

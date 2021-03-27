@@ -14,11 +14,10 @@ function addBlockType(nodeType, attrs) {
     if (dispatch) {
       let pos = $cursor.after()
       let tr = state.tr
-      tr.insert(pos, nodeType.createAndFill(attrs))
-      // TODO: unselectable like divider?
-      tr.setSelection(TextSelection.create(tr.doc, pos + 1))
-      tr.delete($cursor.before(), $cursor.after())
-      dispatch(tr)
+      tr.replaceWith($cursor.before(), $cursor.after(), nodeType.createAndFill(attrs))
+      dispatch(
+          tr.setSelection(TextSelection.near(tr.doc.resolve($cursor.start())))
+      )
     }
 
     return true
