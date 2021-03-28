@@ -2,11 +2,16 @@ import { schema } from "./schema"
 import { TextSelection } from "prosemirror-state"
 import { exitCode } from "prosemirror-commands"
 
-import { EditorState, EditorView, basicSetup} from "@codemirror/basic-setup"
-import { Transaction } from "@codemirror/state"
-import { keymap } from "@codemirror/view"
-import { indentMore, indentSelection } from "@codemirror/commands"
-import { getIndentUnit, indentString } from "@codemirror/language"
+import {EditorView, keymap} from "@codemirror/view"
+import {Transaction, EditorState} from "@codemirror/state"
+import {history, historyKeymap} from "@codemirror/history"
+import {indentOnInput, getIndentUnit, indentString} from "@codemirror/language"
+import {lineNumbers} from "@codemirror/gutter"
+import {defaultKeymap, indentMore, indentSelection} from "@codemirror/commands"
+import {bracketMatching} from "@codemirror/matchbrackets"
+import {closeBrackets, closeBracketsKeymap} from "@codemirror/closebrackets"
+import { classHighlightStyle } from "@codemirror/highlight"
+
 import { javascript } from "@codemirror/lang-javascript"
 
 function insertTab({state, dispatch}) {
@@ -24,6 +29,8 @@ function insertTab({state, dispatch}) {
   return true
 }
 
+import { StyleModule } from "style-mod"
+StyleModule.mount = () => { /* Disabled it ! */ }
 
 export class CodeBlockView {
   constructor(node, view, getPos) {
@@ -38,7 +45,18 @@ export class CodeBlockView {
       state: EditorState.create({
         doc: node.textContent,
         extensions: [
-          basicSetup,
+          lineNumbers(),
+          history(),
+          indentOnInput(),
+          classHighlightStyle,
+          bracketMatching(),
+          closeBrackets(),
+          keymap.of([
+            ...closeBracketsKeymap,
+            ...defaultKeymap,
+            ...historyKeymap
+          ]),
+
           javascript(),
           keymap.of([
             {
