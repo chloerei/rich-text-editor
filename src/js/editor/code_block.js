@@ -2,7 +2,7 @@ import { schema } from "./schema"
 import { TextSelection } from "prosemirror-state"
 import { exitCode } from "prosemirror-commands"
 
-import {EditorView, keymap} from "@codemirror/view"
+import {EditorView, keymap, highlightActiveLine} from "@codemirror/view"
 import {Transaction, EditorState} from "@codemirror/state"
 import {history, historyKeymap} from "@codemirror/history"
 import {indentOnInput, getIndentUnit, indentString} from "@codemirror/language"
@@ -51,6 +51,7 @@ export class CodeBlockView {
           classHighlightStyle,
           bracketMatching(),
           closeBrackets(),
+          highlightActiveLine(),
           keymap.of([
             ...closeBracketsKeymap,
             ...defaultKeymap,
