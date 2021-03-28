@@ -50,14 +50,11 @@ function createBlockAfterIsolating(state, dispatch) {
   return true
 }
 
-
 let backspace = chainCommands(deleteSelection, setParagraph, joinListBackward, joinBackward, selectNodeBackward)
 
 let enter = chainCommands(newlineInCode, splitListItem, createParagraphNear, liftEmptyBlock, createBlockAfterIsolating, splitBlock)
 
 let del = chainCommands(deleteSelection, joinListForward, joinForward, selectNodeForward)
-
-let modEnter = chainCommands(exitCode)
 
 let tab = chainCommands(sinkListItem)
 
@@ -65,7 +62,6 @@ let shiftTab = chainCommands(liftListItem)
 
 export let pcBaseKeymap = {
   "Enter": enter,
-  "Mod-Enter": modEnter,
   "Backspace": backspace,
   "Mod-Backspace": backspace,
   "Delete": del,
