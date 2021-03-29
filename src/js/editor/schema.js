@@ -52,8 +52,16 @@ const schema = new Schema({
       group: "block",
       code: true,
       defining: true,
-      parseDOM: [ { tag: "pre", preserveWhitespace: "full" } ],
-      toDOM() { return [ "pre", [ "code", 0 ] ] }
+      parseDOM: [ {
+        tag: "pre",
+        preserveWhitespace: "full",
+        getAttrs(dom) {
+          return {
+            lang: dom.dataset.codeLanguage
+          }
+        }
+      } ],
+      toDOM(node) { return [ "pre", { "data-code-language": node.attrs.lang }, [ "code", 0 ] ] }
     },
 
     text: {

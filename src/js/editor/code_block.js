@@ -2,17 +2,66 @@ import { schema } from "./schema"
 import { TextSelection } from "prosemirror-state"
 import { exitCode } from "prosemirror-commands"
 
-import {EditorView, keymap, highlightActiveLine} from "@codemirror/view"
-import {Transaction, EditorState} from "@codemirror/state"
-import {history, historyKeymap} from "@codemirror/history"
-import {indentOnInput, getIndentUnit, indentString} from "@codemirror/language"
-import {lineNumbers} from "@codemirror/gutter"
-import {defaultKeymap, indentMore, indentSelection} from "@codemirror/commands"
-import {bracketMatching} from "@codemirror/matchbrackets"
-import {closeBrackets, closeBracketsKeymap} from "@codemirror/closebrackets"
+import { EditorView, keymap, highlightActiveLine } from "@codemirror/view"
+import { Transaction, EditorState, Compartment } from "@codemirror/state"
+import { history, historyKeymap } from "@codemirror/history"
+import { indentOnInput, getIndentUnit, indentString } from "@codemirror/language"
+import { lineNumbers} from "@codemirror/gutter"
+import { defaultKeymap, indentMore, indentSelection } from "@codemirror/commands"
+import { bracketMatching } from "@codemirror/matchbrackets"
+import {closeBrackets, closeBracketsKeymap } from "@codemirror/closebrackets"
 import { classHighlightStyle } from "@codemirror/highlight"
 
-import { javascript } from "@codemirror/lang-javascript"
+import { StreamLanguage } from "@codemirror/stream-parser"
+import { c, cpp, java, csharp, kotlin, objectiveC } from "@codemirror/legacy-modes/mode/clike"
+import { css } from "@codemirror/legacy-modes/mode/css"
+import { diff } from "@codemirror/legacy-modes/mode/diff"
+import { erlang } from "@codemirror/legacy-modes/mode/erlang"
+import { go } from "@codemirror/legacy-modes/mode/go"
+import { haskell } from "@codemirror/legacy-modes/mode/haskell"
+import { javascript, json, typescript } from "@codemirror/legacy-modes/mode/javascript"
+import { python } from "@codemirror/legacy-modes/mode/python"
+import { ruby } from "@codemirror/legacy-modes/mode/ruby"
+import { rust } from "@codemirror/legacy-modes/mode/rust"
+import { shell } from "@codemirror/legacy-modes/mode/shell"
+import { sql } from "@codemirror/legacy-modes/mode/sql"
+import { swift } from "@codemirror/legacy-modes/mode/swift"
+import { html, xml } from "@codemirror/legacy-modes/mode/xml"
+import { yaml } from "@codemirror/legacy-modes/mode/yaml"
+
+const plainText = {
+  token: (stream, state) => {
+    stream.skipToEnd()
+    return null
+  }
+}
+
+const languages = {
+  css: { name: 'CSS', config: css },
+  c: { name: 'C', config: c },
+  cpp: { name: 'C++', config: cpp },
+  csharp: { name: 'CSharp', config: csharp },
+  diff: { name: 'Diff', config: diff },
+  erlang: { name: 'Erlang', config: erlang },
+  go: { name: 'Go', config: go },
+  haskell: { name: 'Haskell', config: haskell },
+  java: { name: 'Java', config: java },
+  javascript: { name: 'JavaScript', config: javascript },
+  json: { name: 'JSON', config: json },
+  kotlin: { name: 'Kotlin', config: kotlin },
+  objectivec: { name: 'ObjectiveC', config: objectiveC },
+  python: { name: 'Python', config: python },
+  plaintext: { name: 'PlainText', config: plainText },
+  ruby: { name: 'Ruby', config: ruby },
+  rust: { name: 'Rust', config: rust },
+  shell: { name: 'Shell', config: shell },
+  sql: { name: 'SQL', config: sql },
+  swift: { name: 'Swift', config: swift },
+  typescript: { name: 'TypeScript', config: typescript },
+  html: { name: 'HTML', config: html },
+  xml: { name: 'XML', config: xml },
+  yaml: { name: 'YAML', config: yaml }
+}
 
 function insertTab({state, dispatch}) {
   if (state.selection.ranges.some(r => !r.empty)) {
@@ -39,7 +88,33 @@ export class CodeBlockView {
     this.getPos = getPos
 
     this.dom = document.createElement('div')
-    this.dom.className = 'editor__code-block'
+    this.dom.className = 'editor-code-block'
+    this.dom.innerHTML = `
+      <div class="editor-toolbar">
+        <div class="editor-toolbar__space">
+        </div>
+        <div class="editor-toolbar__action">
+          <select name="lang">
+          </select>
+        </div>
+      </div>
+    `
+
+    this.langSelect = this.dom.querySelector('select[name="lang"]')
+    for (const lang in languages) {
+      let option = document.createElement('option')
+      option.textContent = languages[lang].name
+      option.value = lang
+      this.langSelect.appendChild(option)
+    }
+    this.langSelect.value = this.node.attrs.lang || 'plaintext'
+    this.langSelect.addEventListener('change', () => {
+      this.view.dispatch(
+        this.view.state.tr.setNodeMarkup(this.getPos(), null, { lang: this.langSelect.value } )
+      )
+    })
+
+    this.language = new Compartment
 
     this.cm = new EditorView({
       state: EditorState.create({
@@ -58,7 +133,7 @@ export class CodeBlockView {
             ...historyKeymap
           ]),
 
-          javascript(),
+          this.language.of(StreamLanguage.define(plainText)),
           keymap.of([
             {
               key: 'Tab',
@@ -86,13 +161,11 @@ export class CodeBlockView {
             }
           })
         ]
-      }),
-      parent: this.dom,
-      // dispatch: (tr) => {
-      //   this.cm.update([tr])
-      //   console.log(this.cm.state.doc.toString())
-      // }
+      })
     })
+
+    this.setLang(this.node.attrs.lang)
+    this.dom.appendChild(this.cm.dom)
   }
 
   setSelection(anchor, head) {
@@ -121,7 +194,19 @@ export class CodeBlockView {
       }
     }
 
+    this.setLang(this.node.attrs.lang)
+
     return true
+  }
+
+  setLang(lang) {
+    if (this.currentLang != lang) {
+      let langConfig = languages[lang] ? languages[lang].config : plainText
+      this.cm.dispatch({
+        effects: this.language.reconfigure(StreamLanguage.define(langConfig))
+      })
+      this.currentLang = lang
+    }
   }
 
   stopEvent() {

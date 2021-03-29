@@ -32,7 +32,6 @@ export class Editor {
         inlineMenu(),
         linkMenu(),
         clipboard(),
-        // arrowHandlers,
         keymap(baseKeymap),
         baseInputRules
       ]

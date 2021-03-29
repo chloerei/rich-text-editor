@@ -242,6 +242,10 @@
   white-space: nowrap;
 }
 
+.editor-toolbar__space {
+  flex-grow: 1;
+}
+
 .editor-toolbar__action {
 }
 
@@ -404,11 +408,5 @@
 
   &:hover {
     background: rgba(0, 0, 0, 0.05);
-  }
-}
-
-.editor {
-  .CodeMirror {
-    background: transparent;
   }
 }
