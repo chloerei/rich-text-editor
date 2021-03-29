@@ -1,6 +1,7 @@
 import { schema } from "./schema"
 import { TextSelection } from "prosemirror-state"
 import { exitCode } from "prosemirror-commands"
+import { mac } from "./commands"
 
 import { EditorView, keymap, highlightActiveLine } from "@codemirror/view"
 import { Transaction, EditorState, Compartment } from "@codemirror/state"
@@ -98,6 +99,17 @@ export class CodeBlockView {
           </select>
         </div>
       </div>
+      <div class="editor-code-block__content">
+      </div>
+      <div class="editor-toolbar">
+        <div class="editor-toolbar__space">
+        </div>
+        <div class="editor-toolbar__info">
+          <div class="editor-code-block__helper-text">
+            exit: ${ mac ? '⌘↩' : 'Alt↩' }
+          </div>
+        </div>
+      </div>
     `
 
     this.langSelect = this.dom.querySelector('select[name="lang"]')
@@ -165,7 +177,7 @@ export class CodeBlockView {
     })
 
     this.setLang(this.node.attrs.lang)
-    this.dom.appendChild(this.cm.dom)
+    this.dom.querySelector('.editor-code-block__content').appendChild(this.cm.dom)
   }
 
   setSelection(anchor, head) {
