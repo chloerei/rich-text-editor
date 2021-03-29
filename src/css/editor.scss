@@ -390,11 +390,8 @@
 }
 
 .editor-code-block {
-  background: rgba(0, 0, 0, 0.05);
-
-  pre {
-    background: transparent !important;
-  }
+  background: #f8f8f8;
+  border-radius: 4px;
 }
 
 .editor-select {

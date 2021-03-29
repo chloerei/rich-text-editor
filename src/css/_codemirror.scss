@@ -1,4 +1,20 @@
 .editor {
+
+  select {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #777;
+    outline: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+
   .cm-editor {
     position: relative;
     box-sizing: border-box;
@@ -27,11 +43,9 @@
     box-sizing: border-box;
     padding: 4px 0;
     outline: none;
-    background: #272822;
-    color: #f8f8f2;
+    color: #333;
 
     &::selection {
-      background: #49483E;
     }
   }
 
@@ -40,8 +54,7 @@
     padding: 0 2px 0 4px;
   }
 
-  .cm-activeLine {
-    background: #373831;
+  .cm-focused .cm-activeLine {
   }
 
   .cm-lineWrapping {
@@ -70,8 +83,7 @@
     height: 100%;
     box-sizing: border-box;
     padding-right: 4px;
-    background: #272822;
-    color: #d0d0d0;
+    color: #999;
   }
 
   .cm-gutter {
@@ -95,31 +107,31 @@
   }
 
   .cmt-link {
-    color: #ae81ff;
   }
 
   .cmt-heading {
   }
 
   .cmt-emphasis {
+    font-style: italic;
   }
 
   .cmt-strong {
+    font-weight: 700;
   }
 
   .cmt-keyword {
-    color: #f92672;
+    color: #333;
+    font-weight: 700
   }
 
   .cmt-atom {
-    color: #ae81ff;
   }
 
   .cmt-bool {
   }
 
   .cmt-url {
-    color: #ae81ff;
   }
 
   .cmt-labelName {
@@ -129,23 +141,27 @@
   }
 
   .cmt-deleted {
+    background: #fdd;
   }
 
   .cmt-literal {
+    color: teal;
   }
 
   .cmt-string {
-    color: #e6db74;
+    color: #d14
   }
 
   .cmt-number {
-    color: #ae81ff;
+    color: teal;
   }
 
   .cmt-string2 {
+    color: #009926;
   }
 
   .cmt-variableName {
+    color: teal;
   }
 
   .cmt-variableName.cmt-local {
@@ -155,27 +171,31 @@
   }
 
   .cmt-variableName2 {
-    color: #9effff;
   }
 
   .cmt-typeName {
+    color: #458;
+    font-weight: 700;
   }
 
   .cmt-namespace {
+    color: #458;
+    font-weight: 700;
   }
 
   .cmt-macroName {
   }
 
   .cmt-propertyName {
-    color: #a6e22e;
+    color: teal;
   }
 
   .cmt-operator {
   }
 
   .cmt-comment {
-    color: #75715e;
+    color: #998;
+    font-style: italic;
   }
 
   .cmt-meta {
@@ -185,6 +205,5 @@
   }
 
   .cmt-punctuation {
-    color: #f8f8f2;
   }
 }
