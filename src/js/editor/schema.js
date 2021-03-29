@@ -56,12 +56,14 @@ const schema = new Schema({
         tag: "pre",
         preserveWhitespace: "full",
         getAttrs(dom) {
-          return {
-            lang: dom.dataset.codeLanguage
-          }
+          let code = dom.querySelector('code')
+          let lang = (code && code.className && code.className.match(/language-(\w+)/)[1]) || null
+          return { lang }
         }
       } ],
-      toDOM(node) { return [ "pre", { "data-code-language": node.attrs.lang }, [ "code", 0 ] ] }
+      toDOM(node) {
+        return [ "pre", { class: node.attrs.lang ? `language-${node.attrs.lang}` : null }, [ "code", 0 ] ]
+      }
     },
 
     text: {
