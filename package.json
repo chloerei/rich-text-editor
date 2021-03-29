@@ -1,10 +1,20 @@
 {
   "name": "rich-text-editor",
+  "files": ["dist"],
+  "main": "./dist/rich-text-editor.umd.js",
+  "module": "./dist/rich-text-editor.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/rich-text-editor.es.js",
+      "require": "./dist/rich-text-editor.umd.js"
+    }
+  },
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "build-site": "vite build --config vite-site.config.js"
   },
   "devDependencies": {
     "sass": "^1.32.8",
