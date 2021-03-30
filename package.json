@@ -1,5 +1,5 @@
 {
-  "name": "rich-text-editor",
+  "name": "@chloerei/rich-text-editor",
   "files": ["dist"],
   "main": "./dist/rich-text-editor.umd.js",
   "module": "./dist/rich-text-editor.es.js",
