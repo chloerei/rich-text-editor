@@ -23,7 +23,7 @@ jobs:
       - run: npm run build-site
       - name: Publish to GitHub Pages
         run: |
-          cd dist
+          cd dist-site
           touch .nojekyll
           git init
           git config user.name "${GITHUB_ACTOR}"
