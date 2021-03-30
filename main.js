@@ -1,4 +1,4 @@
 import { Editor } from './lib/main.js'
 import './style.css'
 
-new Editor(document.querySelector('#editor'))
+window.editor = new Editor(document.querySelector('#editor'))

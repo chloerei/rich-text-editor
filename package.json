@@ -1,8 +1,11 @@
 {
   "name": "@chloerei/rich-text-editor",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/rich-text-editor.umd.js",
   "module": "./dist/rich-text-editor.es.js",
+  "style": "./dist/style.css",
   "exports": {
     ".": {
       "import": "./dist/rich-text-editor.es.js",
