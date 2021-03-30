@@ -4,12 +4,14 @@ This is an experimental WYSIWYG editor. The goal is to achieve an immersive and 
 
 Features:
 
-- Shortcut key `/` to call out the block format menu.
-- Inline format menu displayed on demand.
-- Markdown-style formatted shortcut input.
+- Shortcut key `/` to show the block format menu.
+- Inline format menu displayed when selected text.
+- Markdown-style formatted shortcut.
 - Code highlighting.
 
 This project is developed based on ProseMirror and CodeMirror.
+
+demo: https://chloerei.com/rich-text-editor/
 
 **It has not been developed yet, and it is not recommended to use it in a production environment.**
 
