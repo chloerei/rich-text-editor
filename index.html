@@ -9,10 +9,33 @@
   <body>
     <div class="container">
       <div id="editor">
-        <h1>Rich Text Editor</h1><p>This is an experimental WYSIWYG editor. The goal is to achieve an immersive and concise editing environment.</p><p>Features:</p><ul><li><p>Shortcut key / to call out the block format menu.</p></li><li><p>Inline format menu displayed on demand.</p></li><li><p>Markdown-style formatted shortcut input.</p></li><li><p>Code highlighting.</p></li></ul><p>This project is developed based on ProseMirror and CodeMirror.</p><p><strong>It has not been developed yet, and it is not recommended to use it in a production environment.</strong></p><h2>Installation</h2><pre><code>npm install @chloerei/rich-text-editor</code></pre><p>or</p><pre><code>yarn add @chloerei/rich-text-editor</code></pre><h2>Usage</h2><p>HTML:</p><pre><code>&lt;div id="editor"&gt;&lt;/div&gt;</code></pre><p>JavaScript:</p><pre><code>import { Editor } from "@chloerei/rich-text-editor"
+        <h1>Rich Text Editor</h1>
+        <p>This is an experimental WYSIWYG editor. The goal is to achieve an immersive and concise editing environment.</p>
+        <p>Features:</p>
+        <ul>
+          <li><p>Shortcut key / to show block menu.</p></li>
+          <li><p>Inline format menu when selected text.</p></li>
+          <li><p>Markdown-style formatted shortcut.</p></li>
+          <li><p>Code highlighting.</p></li>
+        </ul>
+        <p>This project is developed based on ProseMirror and CodeMirror.</p>
+        <p><strong>It has not been developed yet, and it is not recommended to use it in a production environment.</strong></p>
+        <h2>Installation</h2>
+        <pre><code class="language-shell">npm install @chloerei/rich-text-editor</code></pre>
+        <p>or</p>
+        <pre><code class="language-shell">yarn add @chloerei/rich-text-editor</code></pre>
+        <h2>Usage</h2>
+        <p>HTML:</p>
+        <pre><code class="language-html">&lt;div id="editor"&gt;&lt;/div&gt;</code></pre>
+        <p>JavaScript:</p>
+        <pre><code class="language-javascript">import { Editor } from "@chloerei/rich-text-editor"
 import "@chloerei/rich-text-editor/dist/style.css"
 
-new Editor(document.querySelector('#editor'))</code></pre><h2>Feedback</h2><p>Open issues in <a href="https://github.com/chloerei/rich-text-editor/issues">https://github.com/chloerei/rich-text-editor/issues</a></p><h2>License</h2><p>MIT license.</p>
+new Editor(document.querySelector('#editor'))</code></pre>
+        <h2>Feedback</h2>
+        <p>Open issues in <a href="https://github.com/chloerei/rich-text-editor/issues">https://github.com/chloerei/rich-text-editor/issues</a></p>
+        <h2>License</h2>
+        <p>MIT license.</p>
       </div>
     </div>
     <script type="module" src="/main.js"></script>
